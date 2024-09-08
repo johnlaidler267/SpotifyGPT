@@ -41,6 +41,8 @@ def main():
     for song in song_data.values():
         stringified_music_data += f"{song['title']} by {song['artist']}. "
 
+    print(stringified_music_data)
+
     # Generate a prompt for the song
     prompt = f"Summarize the music taste of the person who's favorite songs are the following '{stringified_music_data}."
     summary = query_gemini(prompt, api_key)
