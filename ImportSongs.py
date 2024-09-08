@@ -3,15 +3,15 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import json
 
-# Step 1: Set up your Spotify credentials
+# Spotify credentials
 CLIENT_ID = "1b447c06b9d54f7799872d85e3845dd4"
 CLIENT_SECRET = "e6b30b1535c64d7c84242478b293b7e9"
 REDIRECT_URI = "http://localhost:8888/callback"  # You can use localhost for dev
 
-# Step 2: Spotify authorization scope to get liked songs
+# Spotify authorization scope to get liked songs
 SCOPE = "user-library-read user-library-modify playlist-modify-public"
 
-# Step 3: Set up Spotipy client (Python library for Spotify API)
+# Set up Spotipy client (Python library for Spotify API)
 spotipy_client = spotipy.Spotify(
     auth_manager=SpotifyOAuth(
         client_id=CLIENT_ID,
