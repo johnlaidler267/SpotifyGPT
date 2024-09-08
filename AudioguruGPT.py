@@ -2,6 +2,10 @@ import json
 import google.generativeai as genai
 import PIL.Image
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 
 # Function to load the JSON file containing the song data
@@ -19,25 +23,32 @@ def query_gemini(prompt, api_key):
     print(response.text)
 
 
-# Main function
 def main():
-    # Set your OpenAI API key here
-    api_key = "AIzaSyClh6XEjQkFfiy4S7jNxnY5cBUg1TKH4eM"
+    """
+    Main function that summarizes the music taste of a person based on their favorite songs.
+    """
+    # Access the key (from .env file)
+    api_key = os.getenv("API_KEY")
 
     # Load the song data from the JSON file
-    json_file = "liked_songs.json"  # Replace with your JSON file path
+    json_file = "liked_songs.json"
     song_data = load_song_data(json_file)
 
+    # Stringify the song data
     stringified_music_data = ""
+
+    # Concatenate the title and artist of each song
     for song in song_data.values():
         stringified_music_data += f"{song['title']} by {song['artist']}. "
-
-    print(stringified_music_data)
 
     # Generate a prompt for the song
     prompt = f"Summarize the music taste of the person who's favorite songs are the following '{stringified_music_data}."
     summary = query_gemini(prompt, api_key)
     print(f"Summary: {summary}")
+
+
+# Call the main function
+main()
 
 
 if __name__ == "__main__":

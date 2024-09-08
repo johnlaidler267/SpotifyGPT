@@ -22,14 +22,17 @@ spotipy_client = spotipy.Spotify(
 )
 
 
-# Fetch liked songs
+# Fetch liked songs from Spotify API using Spotipy client
 def fetch_liked_songs():
     liked_songs = {}
 
-    # multi-page results dictionary
+    # Multi-page results dictionary
     results = spotipy_client.current_user_saved_tracks(limit=50)
 
+    # Loop through each page of results
     while results:
+
+        # Extract song info from each item in the results and store in liked_songs dictionary
         for item in results["items"]:
             track = item["track"]
             liked_songs[track["id"]] = {
@@ -52,15 +55,16 @@ def fetch_liked_songs():
 
 # Fetch and store songs in JSON
 def save_songs_to_file(song_data, filename="liked_songs.json"):
+    # Save song data to JSON file with indentation for readability 
     with open(filename, "w") as f:
         json.dump(song_data, f, indent=4)
 
-
+# Create a playlist on Spotify from a list of song IDs
 def create_playlist(name, song_ids):
     user_id = spotipy_client.current_user()["id"]
     playlist = spotipy_client.user_playlist_create(user_id, name)
 
-    # Split song_ids into chunks of 100
+    # Add songs to the playlist in chunks of 100 (Spotify API limit)
     chunk_size = 100
     for i in range(0, len(song_ids), chunk_size):
         chunk = song_ids[i : i + chunk_size]
@@ -68,6 +72,24 @@ def create_playlist(name, song_ids):
 
     return playlist["id"]
 
+# Organize liked songs by decade of release year (e.g., 1980s, 1990s)
+def organize_songs_by_decade(liked_songs):
+    organized_songs = {}
+
+    # Loop through each liked song
+    for song_id, song_info in liked_songs.items():
+
+        # Extract the release decade of the song
+        release_decade = song_info["release_decade"]
+
+        # Create a new key for the decade if it doesn't exist
+        if release_decade not in organized_songs:
+            organized_songs[release_decade] = []
+
+        # Append the song info to the list of songs for that decade
+        organized_songs[release_decade].append(song_info)
+
+    return organized_songs
 
 # Example usage
 organized_songs = {
@@ -75,29 +97,14 @@ organized_songs = {
     "1990s": [{"id": "song_id_101"}, {"id": "song_id_102"}, ...],  # Add actual song IDs
 }
 
-
-# Step 7: Organize songs by release decade
-def organize_songs_by_decade(liked_songs):
-    organized_songs = {}
-
-    for song_id, song_info in liked_songs.items():
-        release_decade = song_info["release_decade"]
-
-        if release_decade not in organized_songs:
-            organized_songs[release_decade] = []
-
-        organized_songs[release_decade].append(song_info)
-
-    return organized_songs
-
-
+# Create playlists for each decade
 def create_decade_playlists(organized_songs):
     for decade, songs in organized_songs.items():
         playlist_name = f"{decade} Playlist"
         song_ids = [song["id"] for song in songs]
         playlist_id = create_playlist(playlist_name, song_ids)
 
-
+# Create monthly playlists for the current year from liked songs
 def create_monthly_playlists(liked_songs):
     current_year = datetime.now().year
     organized_songs = {}
