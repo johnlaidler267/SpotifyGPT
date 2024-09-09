@@ -1,5 +1,5 @@
 import os
-from ai_analysis.gemini_query import query_gemini, summarize_music_taste
+from gemini_query import query_gemini, summarize_music_taste
 from utils.json_helpers import load_song_data
 
 
@@ -11,7 +11,7 @@ def main():
     api_key = os.getenv("API_KEY")
 
     # Load the song data from the JSON file
-    json_file = "liked_songs.json"
+    json_file = "../liked_songs.json"
     song_data = load_song_data(json_file)
 
     # Stringify the song data

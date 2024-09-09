@@ -1,4 +1,7 @@
 import google.generativeai as genai
+import sys
+
+sys.path.append("../")
 from config.settings import GENAI_API_KEY
 
 
