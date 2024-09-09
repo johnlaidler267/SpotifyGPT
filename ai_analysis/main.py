@@ -21,7 +21,7 @@ def main():
     for song in song_data.values():
         stringified_music_data += f"{song['title']} by {song['artist']}. "
 
-    summarize_music_taste(song_data)
+    print(summarize_music_taste(song_data))
 
 
 # Call the main function
